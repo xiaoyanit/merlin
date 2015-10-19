@@ -1,0 +1,27 @@
+apply plugin: 'com.android.library'
+apply plugin: 'bintray-release'
+
+dependencies {
+    compile 'com.android.support:support-v4:23.0.1'
+}
+
+android {
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 22
+    }
+
+    compileSdkVersion 23
+    buildToolsVersion "22.0.1"
+}
+
+publish {
+    userOrg = 'novoda'
+    groupId = 'com.novoda'
+    artifactId = 'merlin'
+    version = project.version
+
+    uploadName = 'merlin'
+    description = 'Observes network connection status & gives callbacks'
+    website = 'https://github.com/novoda/merlin'
+}

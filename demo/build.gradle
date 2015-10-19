@@ -1,0 +1,22 @@
+apply plugin: 'com.android.application'
+
+dependencies {
+
+    compile project(':core')
+
+    compile('de.keyboardsurfer.android.widget:crouton:1.7') {
+        exclude module: 'support-v4'
+    }
+
+}
+
+android {
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 22
+    }
+
+    compileSdkVersion 23
+    buildToolsVersion "22.0.1"
+
+}

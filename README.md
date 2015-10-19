@@ -1,127 +1,77 @@
-Merlin
-======
+# merlin [![](https://ci.novoda.com/buildStatus/icon?job=merlin)](https://ci.novoda.com/job/merlin/lastBuild/console) [![](https://raw.githubusercontent.com/novoda/novoda/master/assets/btn_apache_lisence.png)](LICENSE.txt)
 
-####*"An ok name for a library"*
+An ok name for a library.
 
 
-Merlin aims to simplify network monitoring by providing 3 registerable callbacks. 
+## Description
+
+Merlin aims to simplify network monitoring. Providing 3 registerable callbacks for network connectivity changes.
 `onConnect()` , `onDisconnect()` and `onBind(NetworkStatus networkStatus)`.
 
-[Download the jar from here](https://github.com/novoda/merlin/raw/master/releases/merlin-core-v0.2.jar)
 
-or if you're using maven
+## Adding to your project
 
-*The repository is needed until the project is released on maven central, sorry about that*
+To start using this library, add these lines to the `build.gradle` of your project:
 
-    <repositories>
-        <repository>
-          <id>public-mvn-repo-releases</id>
-          <url>https://github.com/novoda/public-mvn-repo/raw/master/releases</url>
-        </repository>
-    </repositories>
+```groovy
+repositories {
+    jcenter()
+}
 
-    <dependency>
-      <groupId>com.novoda.merlin</groupId>
-      <artifactId>merlin-core</artifactId>
-      <version>0.4</version>
-    </dependency>
-    
-
-##Usecases##
-
-####`onConnect()`####
-
-**When** the network state changes from disconnected to connected and a successful host ping has completed.
-
-**Because** you have just aquired a valid network connection, time to update stale data!
-
-####`onDisconnect()`####
-
-**When** the network state changes from connected to disconnected.
-
-**Because** you probably want to tell the user they're now offline! or disable certain functionality until a reliable connection is available again.
-
-####`onBind(NetworkStatus networkStatus)`####
-
-**When** the MerlinService has binded, the current NetworkStatus is provided, although this is without pinging a host. 
-
-**Because** you may need to know the current state of the network before a network change occurs. 
+dependencies {
+    compile 'com.novoda:merlin:0.6.3'
+}
+```
 
 
-##Setup
+## Simple usage
 
-You'll need to add a few things to your manifest :
+Create Merlin:
 
-These permissions (if you don't already have them)
+```java
+merlin = new Merlin.Builder().withConnectableCallbacks().build(context);
+```
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+Bind and unbind the service in your activity:
 
-this service
+```java
+@Override
+protected void onResume() {
+    super.onResume();
+    merlin.bind();
+}
 
-    <service android:exported="false" android:name="com.novoda.merlin.service.MerlinService" />
+@Override
+protected void onPause() {
+    merlin.unbind();
+    super.onPause();
+}
+```
 
-and this receiver
+Register for callbacks:
 
-    <receiver android:name="com.novoda.merlin.receiver.ConnectivityReceiver">
-      <intent-filter>
-        <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-      </intent-filter>
-    </receiver>
-
-##Simple usage
-
-Create Merlin (using Merlin.Builder())
-
-    merlin = new Merlin.Builder().withConnectableCallbacks().build(context);
-
-Bind and unbind the service in your activity
-
+```java
+merlin.registerConnectable(new Connectable() {
     @Override
-    protected void onResume() {
-        super.onResume();
-        merlin.bind();
+    public void onConnect() {
+        // Do something you haz internet!
     }
+});
+```
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        merlin.unbind();
-    }
-
-Register for callbacks
-
-    merlin.registerConnectable(new Connectable() {
-            @Override
-            public void onConnect() {
-                // Do something!
-            }
-    });
-    
-The [MerlinActivity](https://github.com/novoda/merlin/blob/master/demo/src/com/novoda/demo/presentation/base/MerlinActivity.java) within the demo shows a simple way to declutter Merlin from your main application code.    
-
-##Changelog
-
-###0.4###
-  - workaround for issue #4 which causes the Android Runtime to restart after uninstalling
-  - code tidying
-
-###0.3-SNAPSHOT###
-  - quick release to get bug fix out
-  - [Fixed issue #2](https://github.com/novoda/merlin/issues/2)
-
-###0.2###
-  - Removed bindListener.
-  - Added bindable to match connectable and disconnectable.  
-  - Tidied code up.
-
-###0.2-SNAPSHOT###
-  - Initial release.
+Also check the [wiki](https://github.com/novoda/merlin/wiki/Usecases-and-API-usage#retrieve-current-network-state) to see how you can use `MerlinsBeard` to check the network state.
 
 
-##Contributing!
+## Links
 
-If you would like to help out (and everyone should!!) please code against the **[develop branch](https://github.com/novoda/merlin/tree/develop)** 
+Here are a list of useful links:
 
-*and be sure write tests where possible!*
+ * We always welcome people to contribute new features or bug fixes, [here is how](https://github.com/novoda/novoda/blob/master/CONTRIBUTING.md)
+ * If you have a problem check the [Issues Page](https://github.com/novoda/merlin/issues) first to see if we are working on it
+ * For further usage or to delve more deeply checkout the [Project Wiki](https://github.com/novoda/merlin/wiki)
+ * Looking for community help, browse the already asked [Stack Overflow Questions](http://stackoverflow.com/questions/tagged/support-merlin) or use the tag: `support-merlin` when posting a new question
+
+
+
+
 
